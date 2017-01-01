@@ -43,4 +43,4 @@ end
 xhatcheck = fft(xoriginal, M);
 100 * sqrt(sum(sum(abs(xhat - xhatcheck).^2)) / sum(sum(abs(xhat).^2)))
 
-fprintf('Number of operations = %f; N * log2(N) = %f\n', operationCounter, N * log2(N));
+fprintf('Number of operations = %f; M * log2(M) = %f\n', operationCounter, M * log2(M));
