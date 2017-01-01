@@ -2,8 +2,8 @@ clear all
 close all
 clc
 
-N = 16;
-M = 16;
+N = 1024;
+M = 1024;
 
 % --- Original, non zero-padded, sequence
 x = randn(1, N);
@@ -21,6 +21,7 @@ numStages = log2(M);
 
 xhat = zeros(1, M);
 
+operationCounter = 0;
 omegaa = exp(-1i * 2 * pi / M);
 for currentStage = 1 : numStages
     butterflyOffset = 2^(currentStage - 1);
@@ -30,6 +31,7 @@ for currentStage = 1 : numStages
             xhat(i)   = x(i) + x(i + butterflyOffset) * omegaa^(k * 2^(numStages - currentStage)); 
             xhat(i + butterflyOffset) = x(i) - x(i + butterflyOffset) * omegaa^(k * 2^(numStages - currentStage));
             i = i + 1;
+            operationCounter = operationCounter + 2;
             if (k == (butterflyOffset - 1))
                 i = i + butterflyOffset;
             end
@@ -41,4 +43,4 @@ end
 xhatcheck = fft(xoriginal, M);
 100 * sqrt(sum(sum(abs(xhat - xhatcheck).^2)) / sum(sum(abs(xhat).^2)))
 
-
+fprintf('Number of operations = %f; N * log2(N) = %f\n', operationCounter, N * log2(N));
