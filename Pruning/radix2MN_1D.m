@@ -1,24 +1,30 @@
-function xhat = recursiveCall(x, N, M)
+clear all
+close all
+clc
 
-x = [x(1 : 2 : N) x(2 : 2 : N)];
+N = 128;
+M = 4096;
 
-omegaa = exp(-1i * 2 * pi / M);
+x = randn(1, N);
 
-n = 0 : N / 2 - 1;
-m = 0 : N / 2 - 1;
+xoriginal = x;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% MATRIX MULTIPLICATION %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+n = 0 : N - 1;
+m = 0 : N - 1;
 [NN, MM] = meshgrid(n, m);
+xhatcheck = exp(-1i * 2 * pi * NN .* MM / M) * xoriginal.';
 
-WM2 = exp(-1i * 2 * pi * NN .* MM / (M / 2));
+%%%%%%%%%%%%%%%%%%
+% NLOGN APPROACH %
+%%%%%%%%%%%%%%%%%%
+xhat = recursiveCall(xoriginal.', N, M);
 
-if (N > 2)
-%     xhatfirst   = WM2 * x(1 : N / 2) + diag(omegaa.^(n)) * WM2 * x(N / 2 + 1 : N);
-%     xhatsecond  = WM2 * (omegaa.^(N * n) .* x(1 : N / 2).').' + diag(omegaa.^(n + N / 2)) * WM2 * (omegaa.^(N * n) .* x(N / 2 + 1 : N).').';
-    xhatfirst   = recursiveCall(x(1 : N / 2), N / 2, M / 2) + diag(omegaa.^(n)) * recursiveCall(x(N / 2 + 1 : N), N / 2, M / 2);
-    xhatsecond  = recursiveCall((omegaa.^(N * n) .* x(1 : N / 2)).', N / 2, M / 2) + diag(omegaa.^(n + N / 2)) * recursiveCall((omegaa.^(N * n) .* x(N / 2 + 1 : N)).', N / 2, M / 2);
-    xhat = [xhatfirst.' xhatsecond.'].';
-else
-    n = 0 : N - 1;
-    m = 0 : N - 1;
-    [NN, MM] = meshgrid(n, m);
-    xhat = exp(-1i * 2 * pi * NN .* MM / M) * x.';
-end
+100 * sqrt(sum(sum(abs(xhatcheck(1 : N) - xhat(1 : N)).^2)) / sum(sum(abs(xhatcheck(1 : N)).^2)))
+
+figure
+plot(abs(xhatcheck))
+hold on
+plot(abs(xhat), 'ro')
