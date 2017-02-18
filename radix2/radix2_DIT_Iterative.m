@@ -29,7 +29,7 @@ for p = 1 : numStages
             sumCount = sumCount + 6;
             butterflyStart = butterflyStart + 1;
             if (interButterflyIndex == (alpha - 1))
-                butterflyStart=butterflyStart + alpha;
+                butterflyStart = butterflyStart + alpha;
             end;
         end;
     end;
@@ -38,7 +38,7 @@ end;
 timeCooleyTukey = toc;
 
 tic
-xhatcheck = fft(xoriginal, N);
+xhatcheck = fft(xoriginal);
 timeFFTW = toc;
 
 rms = 100 * sqrt(sum(sum(abs(xhat - xhatcheck).^2)) / sum(sum(abs(xhat).^2)));
@@ -47,5 +47,5 @@ fprintf('Time Cooley-Tukey = %f; \t Time FFTW = %f\n\n', timeCooleyTukey, timeFF
 fprintf('Theoretical multiplications count \t = %i; \t Actual multiplications count \t = %i\n', ...
          2 * N * log2(N), mulCount);
 fprintf('Theoretical additions count \t\t = %i; \t Actual additions count \t\t = %i\n\n', ...
-         3 * N * log2(N), mulCount);
+         3 * N * log2(N), sumCount);
 fprintf('Root mean square with FFTW implementation = %.10e\n', rms);
