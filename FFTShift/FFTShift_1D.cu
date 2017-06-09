@@ -1,9 +1,5 @@
 // /usr/local/cuda-8.0/bin/nvcc -O3 -gencode arch=compute_50,code=sm_50 -m64  FFTShift.cu -lcufft_static -lculibos --relocatable-device-code=true
 
-// --- This code compares four different ways to perform the FFTshift:
-//
-// --- 1)
-
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
@@ -102,7 +98,7 @@ __device__ cufftCallbackLoadC fftshift_1D_chessboard_callback_v3_Ptr = fftshift_
 /********/
 int main()
 {
-    const int N = 524288;
+    const int N = 131072;
 //    const int N = 16;
 
     TimingGPU timerGPU;
